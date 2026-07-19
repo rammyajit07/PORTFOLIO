@@ -114,7 +114,7 @@ export default function Projects() {
               02 / SELECTED WORK
             </span>
             <h2 className="text-4xl md:text-5xl font-serif font-light text-fg-main select-none leading-none">
-              Visualizing <span className="italic text-fg-muted font-normal">Solutions</span>
+              Projects 
             </h2>
           </div>
           <p className="text-sm text-fg-muted max-w-xs mt-6 md:mt-0 font-normal leading-relaxed">
