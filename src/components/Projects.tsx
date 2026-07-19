@@ -9,12 +9,13 @@ import { ArrowUpRight } from 'lucide-react';
 
 const PROJECTS = [
   {
-    id: 'aura',
-    title: 'AURA',
-    category: 'Minimalist E-Commerce Platform',
+    id: 'minimalistart',
+    title: 'MINIMALISTART.CO',
+    category: 'Handcrafted Crochet Showcase & E-Store',
     year: '2025',
-    src: '/project-aura.png',
-    tags: ['Creative Tech', 'User Experience', 'Next.js']
+    src: '/project-minimalistart.png',
+    tags: ['Slow Craft', 'React & Vite', 'E-Commerce'],
+    link: 'https://minimalisticart-co.vercel.app/'
   },
   {
     id: 'chronos',
@@ -123,62 +124,80 @@ export default function Projects() {
 
         {/* Project Listings */}
         <div className="flex flex-col gap-24 md:gap-36">
-          {PROJECTS.map((project, idx) => (
-            <div
-              key={project.id}
-              className="project-card group grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full border-b border-zinc-900 pb-16 md:pb-24 overflow-hidden"
-              data-cursor="view"
-            >
-              {/* Left Side: Project details */}
-              <div className="lg:col-span-4 flex flex-col justify-between h-full min-h-[220px]">
-                <div className="flex flex-col">
-                  <span className="text-xs font-semibold tracking-wider text-fg-muted">
-                    0{idx + 1} / {project.year}
-                  </span>
-                  <h3 className="text-4xl md:text-5xl font-serif text-fg-main font-light mt-4 tracking-tight group-hover:text-accent transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="text-sm text-fg-muted mt-3 max-w-sm">
-                    {project.category}
-                  </p>
-                </div>
-
-                <div className="project-details flex flex-col gap-4 mt-8 lg:mt-0">
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[10px] tracking-widest uppercase border border-zinc-800 text-fg-muted px-3 py-1 rounded-full group-hover:border-zinc-700 transition-colors"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+          {PROJECTS.map((project, idx) => {
+            const CardWrapper = project.link
+              ? ({ children }: { children: React.ReactNode }) => (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-card group grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full border-b border-zinc-900 pb-16 md:pb-24 overflow-hidden cursor-none"
+                    data-cursor="view"
+                  >
+                    {children}
+                  </a>
+                )
+              : ({ children }: { children: React.ReactNode }) => (
+                  <div
+                    className="project-card group grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full border-b border-zinc-900 pb-16 md:pb-24 overflow-hidden"
+                    data-cursor="view"
+                  >
+                    {children}
                   </div>
-                  
-                  <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-fg-main mt-2">
-                    <span>View Case Study</span>
-                    <ArrowUpRight size={14} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                );
+
+            return (
+              <CardWrapper key={project.id}>
+                {/* Left Side: Project details */}
+                <div className="lg:col-span-4 flex flex-col justify-between h-full min-h-[220px]">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-semibold tracking-wider text-fg-muted">
+                      0{idx + 1} / {project.year}
+                    </span>
+                    <h3 className="text-4xl md:text-5xl font-serif text-fg-main font-light mt-4 tracking-tight group-hover:text-accent transition-colors duration-300">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm text-fg-muted mt-3 max-w-sm">
+                      {project.category}
+                    </p>
+                  </div>
+
+                  <div className="project-details flex flex-col gap-4 mt-8 lg:mt-0">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] tracking-widest uppercase border border-zinc-800 text-fg-muted px-3 py-1 rounded-full group-hover:border-zinc-700 transition-colors"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-fg-main mt-2">
+                      <span>{project.link ? 'View Live Site' : 'View Case Study'}</span>
+                      <ArrowUpRight size={14} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Right Side: Animated Image Card */}
-              <div className="lg:col-span-8 w-full">
-                <div className="img-parallax-wrapper relative aspect-[16/10] w-full overflow-hidden bg-zinc-950 rounded-lg border border-zinc-900">
-                  <Image
-                    src={project.src}
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 65vw"
-                    priority={idx === 0}
-                    className="project-img object-cover scale-110 group-hover:scale-[1.14] transition-transform duration-700 ease-out will-change-transform"
-                  />
-                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+                {/* Right Side: Animated Image Card */}
+                <div className="lg:col-span-8 w-full">
+                  <div className="img-parallax-wrapper relative aspect-[16/10] w-full overflow-hidden bg-zinc-950 rounded-lg border border-zinc-900">
+                    <Image
+                      src={project.src}
+                      alt={project.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 65vw"
+                      priority={idx === 0}
+                      className="project-img object-cover scale-110 group-hover:scale-[1.14] transition-transform duration-700 ease-out will-change-transform"
+                    />
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+                  </div>
                 </div>
-              </div>
-
-            </div>
-          ))}
+              </CardWrapper>
+            );
+          })}
         </div>
       </div>
     </section>
