@@ -10,7 +10,7 @@ const GREETINGS = [
 
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const wordsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     getLenis()?.stop();
@@ -80,16 +80,19 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     >
       <div className="relative flex items-center justify-center">
         {GREETINGS.map((word, i) => (
-          <span
+          <div
             key={i}
             ref={(el) => {
               wordsRef.current[i] = el;
             }}
-            className="absolute text-5xl md:text-7xl font-sans font-bold text-white tracking-tight will-change-transform"
+            className="absolute flex items-center gap-4 will-change-transform"
             style={{ opacity: 0 }}
           >
-            {word}
-          </span>
+            <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />
+            <span className="text-4xl md:text-5xl font-serif font-light text-fg-main tracking-normal">
+              {word}
+            </span>
+          </div>
         ))}
       </div>
     </div>

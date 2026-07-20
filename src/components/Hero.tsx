@@ -94,10 +94,10 @@ export default function Hero() {
       {/* Slider Container (Massive text overlapping the bottom of the image) */}
       <div className="absolute bottom-[25%] md:bottom-[10%] left-0 w-full whitespace-nowrap overflow-visible pointer-events-none z-10">
         <div ref={sliderRef} className="relative w-max flex items-center flex-nowrap m-0">
-          <p className="whitespace-nowrap text-[120px] md:text-[250px] leading-none font-sans font-medium tracking-tight m-0 pr-[50px] text-white">
+          <p className="whitespace-nowrap text-[120px] md:text-[250px] leading-none font-sans font-normal tracking-tight m-0 pr-[50px] text-white">
             - Rammyajit Deb - Rammyajit Deb - Rammyajit Deb -
           </p>
-          <p className="whitespace-nowrap text-[120px] md:text-[250px] leading-none font-sans font-medium tracking-tight m-0 pr-[50px] absolute left-[100%] top-0 text-white">
+          <p className="whitespace-nowrap text-[120px] md:text-[250px] leading-none font-sans font-normal tracking-tight m-0 pr-[50px] absolute left-[100%] top-0 text-white">
             - Rammyajit Deb - Rammyajit Deb - Rammyajit Deb -
           </p>
         </div>

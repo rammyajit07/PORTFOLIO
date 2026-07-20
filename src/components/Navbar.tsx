@@ -305,9 +305,9 @@ export default function Navbar() {
           <div className="flex flex-col gap-1 text-[11px] uppercase tracking-widest text-fg-muted">
             <span className="text-[9px] uppercase tracking-[0.3em] text-fg-muted font-bold block mb-2">Socials</span>
             <div className="flex gap-4">
-              <a href="#" className="hover:text-accent transition-colors">LinkedIn</a>
-              <a href="#" className="hover:text-accent transition-colors">GitHub</a>
-              <a href="#" className="hover:text-accent transition-colors">Twitter</a>
+              <a href="https://github.com/rammyajit07" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">GitHub</a>
+              <a href="https://www.instagram.com/rammyajit/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Instagram</a>
+              <a href="mailto:rammyajit07@gmail.com" className="hover:text-accent transition-colors">Email</a>
             </div>
           </div>
         </div>
