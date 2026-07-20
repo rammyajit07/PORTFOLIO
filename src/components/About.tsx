@@ -6,23 +6,28 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const ABOUT_PARAGRAPH = 
-  "I specialize in constructing digital pathways that bridge structural engineering with visual poetry. By prioritizing meticulous typographic hierarchy, generous white space, and organic scroll-triggered physics, I create interfaces that feel responsive, tactile, and highly premium. No templates. No shortcuts. Just raw craftsmanship designed to capture attention and elevate digital communication.";
+  "I'm a frontend developer and MCA student passionate about building modern web experiences. I create responsive websites with Next.js, React, and Tailwind CSS, while also designing clean UI concepts and engaging Instagram carousels in Figma. I'm always learning and refining my skills through every project.";
 
 const TIMELINE = [
-  { year: '2024 — Present', role: 'Senior Creative Developer', company: 'Studio Aether' },
-  { year: '2022 — 2024', role: 'Interaction Architect', company: 'Vortex Digital' },
-  { year: '2020 — 2022', role: 'Frontend Engineer', company: 'Spectra Tech' }
+  {
+    year: '2022 — 2025',
+    role: 'Bachelor of Computer Applications (BCA)',
+    institution: 'DHSK College, Dibrugarh',
+  },
+  {
+    year: '2026 — Present',
+    role: 'Master of Computer Applications (MCA)',
+    institution: 'Girijananda Chowdhury University, Guwahati',
+  },
 ];
 
 const SKILLS = [
-  'Next.js / App Router',
-  'TypeScript & API Design',
-  'GSAP / Motion Design',
-  'Fluid Layouts (Tailwind CSS)',
-  'Creative Technical Direction',
-  'Performance Optimization',
-  'Semantic Accessibility',
-  'Interaction Engineering'
+  "NEXT.JS",
+  "TYPESCRIPT",
+  "TAILWIND CSS",
+  "FIGMA",
+  "GSAP",
+  "GIT & GITHUB",
 ];
 
 export default function About() {
@@ -106,8 +111,8 @@ export default function About() {
               01 / PERSPECTIVE
             </span>
             <h2 className="about-title text-4xl md:text-5xl font-serif text-fg-main font-light leading-tight select-none">
-              Engineering <br />
-              <span className="italic text-fg-muted font-normal">Fluid Aesthetics</span>
+              About <br />
+              <span className="italic text-fg-muted font-normal">Me</span>
             </h2>
           </div>
 
@@ -148,7 +153,7 @@ export default function About() {
                         {item.role}
                       </span>
                       <span className="text-sm text-fg-muted md:w-1/4 mt-1 md:mt-0 md:text-right">
-                        {item.company}
+                        {item.institution}
                       </span>
                     </div>
                   </div>

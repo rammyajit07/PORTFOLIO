@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
+import FigmaCarousel from './FigmaCarousel';
 
 const PROJECTS = [
   {
@@ -15,15 +16,22 @@ const PROJECTS = [
     year: '2025',
     src: '/project-minimalistart.png',
     tags: ['Slow Craft', 'React & Vite', 'E-Commerce'],
-    link: 'https://minimalisticart-co.vercel.app/'
+    link: 'https://minimalisticart-co.vercel.app/',
+    description: undefined as string | undefined,
+    carousel: false,
+    linkLabel: 'View Live Site',
   },
   {
-    id: 'chronos',
-    title: 'CHRONOS',
-    category: 'Horological Digital Gallery',
-    year: '2024',
-    src: '/project-chronos.png',
-    tags: ['Interactive Motion', 'Front-End Architecture', 'GSAP']
+    id: 'figma-carousels',
+    title: 'FIGMA CAROUSELS',
+    category: 'Instagram Carousel Collection',
+    year: '2026',
+    src: undefined as string | undefined,
+    tags: ['FIGMA', 'INSTAGRAM', 'UI DESIGN'],
+    link: undefined as string | undefined,
+    description: 'A collection of Instagram carousel designs created in Figma, showcasing clean layouts, visual storytelling, and attention to detail.',
+    carousel: true,
+    linkLabel: 'VIEW GALLERY',
   },
   {
     id: 'synapse',
@@ -31,7 +39,11 @@ const PROJECTS = [
     category: 'Cybernetic Graphics Sandbox',
     year: '2024',
     src: '/project-synapse.png',
-    tags: ['TypeScript API', 'Data Visualization', 'UI Design']
+    tags: ['TypeScript API', 'Data Visualization', 'UI Design'],
+    link: undefined as string | undefined,
+    description: undefined as string | undefined,
+    carousel: false,
+    linkLabel: 'View Case Study',
   }
 ];
 
@@ -118,7 +130,7 @@ export default function Projects() {
             </h2>
           </div>
           <p className="text-sm text-fg-muted max-w-xs mt-6 md:mt-0 font-normal leading-relaxed">
-            A curated index of creative systems demonstrating semantic execution, performance integrity, and aesthetic polish.
+            A collection of projects showcasing my skills in web development, design, and creating modern digital experiences.
           </p>
         </div>
 
@@ -160,6 +172,11 @@ export default function Projects() {
                     <p className="text-sm text-fg-muted mt-3 max-w-sm">
                       {project.category}
                     </p>
+                    {project.description && (
+                      <p className="text-sm text-fg-muted mt-4 max-w-sm leading-relaxed">
+                        {project.description}
+                      </p>
+                    )}
                   </div>
 
                   <div className="project-details flex flex-col gap-4 mt-8 lg:mt-0">
@@ -175,25 +192,29 @@ export default function Projects() {
                     </div>
 
                     <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-fg-main mt-2">
-                      <span>{project.link ? 'View Live Site' : 'View Case Study'}</span>
+                      <span>{project.linkLabel}</span>
                       <ArrowUpRight size={14} className="transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
                     </div>
                   </div>
                 </div>
 
-                {/* Right Side: Animated Image Card */}
+                {/* Right Side: Image / Carousel */}
                 <div className="lg:col-span-8 w-full">
-                  <div className="img-parallax-wrapper relative aspect-[16/10] w-full overflow-hidden bg-zinc-950 rounded-lg border border-zinc-900">
-                    <Image
-                      src={project.src}
-                      alt={project.title}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 65vw"
-                      priority={idx === 0}
-                      className="project-img object-cover scale-110 group-hover:scale-[1.14] transition-transform duration-700 ease-out will-change-transform"
-                    />
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
-                  </div>
+                  {project.carousel ? (
+                    <FigmaCarousel />
+                  ) : (
+                    <div className="img-parallax-wrapper relative aspect-[16/10] w-full overflow-hidden bg-zinc-950 rounded-lg border border-zinc-900">
+                      <Image
+                        src={project.src!}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 65vw"
+                        priority={idx === 0}
+                        className="project-img object-cover scale-110 group-hover:scale-[1.14] transition-transform duration-700 ease-out will-change-transform"
+                      />
+                      <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
+                    </div>
+                  )}
                 </div>
               </CardWrapper>
             );
