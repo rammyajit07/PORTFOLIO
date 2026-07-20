@@ -129,8 +129,6 @@ export default function Projects() {
               ? ({ children }: { children: React.ReactNode }) => (
                   <a
                     href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="project-card group grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full border-b border-zinc-900 pb-16 md:pb-24 overflow-hidden cursor-none"
                     data-cursor="view"
                   >
