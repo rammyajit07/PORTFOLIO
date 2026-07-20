@@ -3,6 +3,7 @@ import { Inter, Cormorant_Garamond } from 'next/font/google';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
 import CustomCursor from '@/components/CustomCursor';
+import PageRestoreGuard from '@/components/PageRestoreGuard';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className="bg-bg-main text-fg-main antialiased overflow-x-hidden selection:bg-accent selection:text-bg-main">
         <SmoothScroll>
           <CustomCursor />
+          <PageRestoreGuard />
           {children}
         </SmoothScroll>
       </body>

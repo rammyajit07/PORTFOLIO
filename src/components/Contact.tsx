@@ -136,6 +136,8 @@ export default function Contact() {
                 <a
                   key={id}
                   href={href}
+                  target={id !== 'email' ? '_blank' : undefined}
+                  rel={id !== 'email' ? 'noopener noreferrer' : undefined}
                   aria-label={label}
                   data-cursor="pointer"
                   className="group flex flex-col items-center gap-3"
