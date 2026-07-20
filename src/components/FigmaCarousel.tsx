@@ -25,7 +25,8 @@ export default function FigmaCarousel() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const pointerDownPos = useRef<{ x: number; y: number } | null>(null);
+  // Track if embla is dragging so we don't navigate on drag
+  const isDraggingRef = useRef(false);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -39,23 +40,6 @@ export default function FigmaCarousel() {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
-
-  const handleViewportPointerDown = useCallback((e: React.PointerEvent) => {
-    pointerDownPos.current = { x: e.clientX, y: e.clientY };
-    (e.currentTarget as HTMLDivElement).style.cursor = 'grabbing';
-  }, []);
-
-  const handleViewportPointerUp = useCallback((e: React.PointerEvent) => {
-    (e.currentTarget as HTMLDivElement).style.cursor = 'grab';
-    if (!pointerDownPos.current) return;
-    const dx = Math.abs(e.clientX - pointerDownPos.current.x);
-    const dy = Math.abs(e.clientY - pointerDownPos.current.y);
-    pointerDownPos.current = null;
-    // Only open link if pointer barely moved (genuine tap/click, not a drag)
-    if (dx < 5 && dy < 5) {
-      window.open(INSTAGRAM_URL, '_blank', 'noopener,noreferrer');
-    }
-  }, []);
 
   // Keyboard navigation
   useEffect(() => {
@@ -87,9 +71,19 @@ export default function FigmaCarousel() {
     onSelect();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
+    // Track drag state so click handler knows not to navigate after a drag
+    const onDragStart = () => { isDraggingRef.current = true; };
+    const onDragEnd = () => {
+      // Small delay so the click event (which fires after pointerup) can read the flag
+      setTimeout(() => { isDraggingRef.current = false; }, 100);
+    };
+    emblaApi.on('pointerDown', onDragStart);
+    emblaApi.on('pointerUp', onDragEnd);
     return () => {
       emblaApi.off('select', onSelect);
       emblaApi.off('reInit', onSelect);
+      emblaApi.off('pointerDown', onDragStart);
+      emblaApi.off('pointerUp', onDragEnd);
     };
   }, [emblaApi, onSelect]);
 
@@ -99,13 +93,11 @@ export default function FigmaCarousel() {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Embla Viewport — click opens Instagram post, drag scrolls */}
+      {/* Embla Viewport */}
       <div
         ref={emblaRef}
         className="overflow-hidden rounded-lg border border-zinc-900 bg-zinc-950"
-        style={{ cursor: 'grab' }}
-        onPointerDown={handleViewportPointerDown}
-        onPointerUp={handleViewportPointerUp}
+        style={{ cursor: 'grab', touchAction: 'pan-y' }}
       >
         <div className="flex">
           {SLIDES.map((src, i) => (
@@ -128,7 +120,22 @@ export default function FigmaCarousel() {
         </div>
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Transparent anchor overlay — covers the carousel for click/tap navigation.
+          Pointer events are passed through to embla for dragging; clicks only fire
+          when embla didn't drag (isDraggingRef stays false). */}
+      <a
+        href={INSTAGRAM_URL}
+        aria-label="View Instagram carousel post"
+        onClick={(e) => {
+          if (isDraggingRef.current) {
+            e.preventDefault();
+          }
+        }}
+        className="absolute inset-0 z-[5] rounded-lg"
+        style={{ touchAction: 'pan-y' }}
+      />
+
+      {/* Navigation Arrows — sit above the overlay */}
       <button
         onClick={(e) => { e.preventDefault(); e.stopPropagation(); scrollPrev(); }}
         aria-label="Previous slide"
@@ -158,8 +165,8 @@ export default function FigmaCarousel() {
         <ChevronRight size={16} strokeWidth={2} />
       </button>
 
-      {/* Dot Indicators */}
-      <div className="flex justify-center gap-1.5 mt-3">
+      {/* Dot Indicators — above the overlay */}
+      <div className="relative z-10 flex justify-center gap-1.5 mt-3">
         {SLIDES.map((_, i) => (
           <button
             key={i}
@@ -174,7 +181,7 @@ export default function FigmaCarousel() {
         ))}
       </div>
 
-      {/* Slide Counter */}
+      {/* Slide Counter — above the overlay */}
       <div className="absolute top-3 right-3 z-10
         text-[10px] tracking-widest uppercase text-fg-muted
         bg-black/60 backdrop-blur-sm border border-zinc-800

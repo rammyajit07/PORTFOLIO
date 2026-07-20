@@ -43,6 +43,13 @@ body {
   width: 100%;
 }
 
+/* iOS Safari tap fix — ensures <a> and <button> are always tappable */
+a, button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
