@@ -34,8 +34,6 @@ export default function Contact() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentTime, setCurrentTime] = useState('');
 
-  const [transitioningTo, setTransitioningTo] = useState<string | null>(null);
-
   useEffect(() => {
     const updateClock = () => {
       const now = new Date();
@@ -80,44 +78,6 @@ export default function Contact() {
       }
     );
   }, []);
-
-  const handleSocialClick = (e: React.MouseEvent, label: string, href: string, isEmail: boolean) => {
-    e.preventDefault();
-    setTransitioningTo(label);
-    
-    const tl = gsap.timeline({
-      onComplete: () => {
-        if (isEmail) {
-          window.location.href = href;
-        } else {
-          window.open(href, '_blank', 'noopener,noreferrer');
-        }
-        
-        // Slide out after a brief delay
-        setTimeout(() => {
-          gsap.to('#transition-overlay', { yPercent: -100, duration: 0.8, ease: 'power4.inOut' });
-          gsap.to('#transition-text', { opacity: 0, duration: 0.4 });
-        }, 500);
-      }
-    });
-
-    // Reset overlay position to bottom
-    gsap.set('#transition-overlay', { yPercent: 100 });
-    gsap.set('#transition-text', { opacity: 0, y: 20 });
-
-    // Animate in
-    tl.to('#transition-overlay', {
-      yPercent: 0,
-      duration: 0.8,
-      ease: 'power4.inOut'
-    })
-    .to('#transition-text', {
-      opacity: 1,
-      y: 0,
-      duration: 0.4,
-      ease: 'power2.out'
-    }, "-=0.4");
-  };
 
   return (
     <section
@@ -176,7 +136,8 @@ export default function Contact() {
                 <a
                   key={id}
                   href={href}
-                  onClick={(e) => handleSocialClick(e, label, href, id === 'email')}
+                  target={id !== 'email' ? '_blank' : undefined}
+                  rel={id !== 'email' ? 'noopener noreferrer' : undefined}
                   aria-label={label}
                   data-cursor="pointer"
                   className="group flex flex-col items-center gap-3"
@@ -215,18 +176,6 @@ export default function Contact() {
             </p>
           </div>
 
-        </div>
-      </div>
-      
-      {/* Page Transition Overlay */}
-      <div
-        id="transition-overlay"
-        className="fixed inset-0 z-[9999] bg-bg-main flex items-center justify-center pointer-events-none"
-        style={{ transform: 'translateY(100%)' }}
-      >
-        <div id="transition-text" className="flex items-center gap-4 text-fg-main text-4xl md:text-5xl font-serif font-light opacity-0">
-          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />
-          <span>{transitioningTo}</span>
         </div>
       </div>
     </section>
