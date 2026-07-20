@@ -3,11 +3,13 @@
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import MagneticButton from './MagneticButton';
+import { getLenis } from '@/lib/getLenis';
 
 export default function Footer() {
   const handleScrollTop = () => {
-    if (window.lenis) {
-      window.lenis.scrollTo('#home', { duration: 1.8 });
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo('#home', { duration: 1.8 });
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }

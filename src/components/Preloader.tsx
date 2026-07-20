@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { getLenis } from '@/lib/getLenis';
 
 const GREETINGS = [
   "Hello", "Bonjour", "Hola", "Ciao", "Olá", "Hallo", "Namaste", "こんにちは", "안녕하세요", "你好", "مرحباً", "Привет"
@@ -12,12 +13,12 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
   const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
-    if (window.lenis) window.lenis.stop();
+    getLenis()?.stop();
 
     const tl = gsap.timeline({
       onComplete: () => {
         onComplete();
-        if (window.lenis) window.lenis.start();
+        getLenis()?.start();
       }
     });
 

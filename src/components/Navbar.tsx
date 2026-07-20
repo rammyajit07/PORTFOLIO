@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import MagneticButton from './MagneticButton';
+import { getLenis } from '@/lib/getLenis';
 
 const LINKS = [
   { label: 'Home', href: '#home' },
@@ -73,7 +74,7 @@ export default function Navbar() {
 
     if (isOpen) {
       // Prevent body scrolling
-      if (window.lenis) window.lenis.stop();
+      getLenis()?.stop();
 
       // Show overlay background
       gsap.to(overlay, {
@@ -106,7 +107,7 @@ export default function Navbar() {
         );
     } else {
       // Allow body scrolling
-      if (window.lenis) window.lenis.start();
+      getLenis()?.start();
 
       // Hide overlay background
       gsap.to(overlay, {
@@ -143,9 +144,10 @@ export default function Navbar() {
     setIsOpen(false);
     
     // Smooth scroll to element using Lenis
-    const target = document.querySelector(href);
-    if (target && window.lenis) {
-      window.lenis.scrollTo(target, { offset: 0, duration: 1.5 });
+    const target = document.querySelector(href) as HTMLElement | null;
+    const lenis = getLenis();
+    if (target && lenis) {
+      lenis.scrollTo(target, { offset: 0, duration: 1.5 });
     }
   };
 

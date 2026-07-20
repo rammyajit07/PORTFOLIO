@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { setLenis } from '@/lib/getLenis';
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
@@ -45,14 +46,14 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     // Initial refresh
     ScrollTrigger.refresh();
 
-    // Export lenis globally for simple scrolling interactions elsewhere
-    window.lenis = lenis;
+    // Export lenis instance for use in other components
+    setLenis(lenis);
 
     return () => {
       gsap.ticker.remove(updatePhysics);
       ScrollTrigger.removeEventListener('refresh', handleRefresh);
       lenis.destroy();
-      window.lenis = null;
+      setLenis(null);
     };
   }, []);
 
