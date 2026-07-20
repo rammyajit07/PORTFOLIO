@@ -33,18 +33,6 @@ const PROJECTS = [
     carousel: true,
     linkLabel: 'VIEW GALLERY',
   },
-  {
-    id: 'synapse',
-    title: 'SYNAPSE',
-    category: 'Cybernetic Graphics Sandbox',
-    year: '2024',
-    src: '/project-synapse.png',
-    tags: ['TypeScript API', 'Data Visualization', 'UI Design'],
-    link: undefined as string | undefined,
-    description: undefined as string | undefined,
-    carousel: false,
-    linkLabel: 'View Case Study',
-  }
 ];
 
 export default function Projects() {

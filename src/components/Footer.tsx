@@ -31,15 +31,15 @@ export default function Footer() {
           {/* Left Side: Copyright / Location */}
           <div className="flex flex-col gap-4 text-xs text-fg-muted uppercase tracking-widest">
             <div className="flex flex-col gap-1">
-              <span className="font-bold text-fg-main">© 2026 Portfolio Studio</span>
+              <span className="font-bold text-fg-main">©PORTFOLIO</span>
               <span>All rights reserved. Designed from scratch.</span>
             </div>
-            <span>Designed in New Delhi, India</span>
+            <span>Designed by, Rammyajit Deb</span>
           </div>
 
           {/* Center: A nice quote or brand motto */}
           <div className="hidden lg:block text-xs font-serif italic text-fg-muted max-w-xs text-center leading-relaxed">
-            &ldquo;Craftsmanship means details. Motion means life. Architecture means stability.&rdquo;
+            &ldquo;Clean design. Smooth interactions. Built with attention to detail.&rdquo;
           </div>
 
           {/* Right Side: Back to top action with magnetic button */}

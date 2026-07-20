@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   title: 'Portfolio | Creative Developer & Interaction Architect',
   description: 'Premium cinematic personal portfolio website highlighting architectural web systems, meticulous typography, and fluid interactive design.',
   authors: [{ name: 'Rammy Sen' }],
+  icons: {
+    icon: '/profile.png',
+  },
 };
 
 export default function RootLayout({

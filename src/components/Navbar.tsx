@@ -16,6 +16,7 @@ const LINKS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
+  const [transitioningTo, setTransitioningTo] = useState<string | null>(null);
   
   const burgerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -140,15 +141,61 @@ export default function Navbar() {
     }
   }, [isOpen]);
 
-  const handleLinkClick = (href: string) => {
+  const handleLinkClick = (href: string, label: string) => {
     setIsOpen(false);
+    setTransitioningTo(label);
     
-    // Smooth scroll to element using Lenis
-    const target = document.querySelector(href) as HTMLElement | null;
-    const lenis = getLenis();
-    if (target && lenis) {
-      lenis.scrollTo(target, { offset: 0, duration: 1.5 });
-    }
+    // Setup initial state for the overlay: visible but pushed below the screen
+    gsap.set('#nav-transition-overlay', { yPercent: 100, opacity: 1 });
+    gsap.set('#nav-transition-text', { opacity: 0, y: 20 });
+
+    // 1. Slide up to cover screen
+    gsap.to('#nav-transition-overlay', {
+      yPercent: 0,
+      duration: 0.8,
+      ease: 'power4.inOut',
+      onComplete: () => {
+        // 2. Jump to the section instantly while screen is black
+        const target = document.querySelector(href) as HTMLElement | null;
+        if (target) {
+          try {
+            const lenis = getLenis();
+            if (lenis) {
+              lenis.scrollTo(target, { immediate: true });
+            }
+          } catch (e) {
+            // fallback
+          }
+          target.scrollIntoView({ behavior: 'auto' });
+        }
+
+        // 3. Hold briefly, then slide up and out of the screen
+        setTimeout(() => {
+          gsap.to('#nav-transition-overlay', {
+            yPercent: -100,
+            duration: 0.8,
+            ease: 'power4.inOut',
+            onComplete: () => {
+              // Reset back to invisible state
+              gsap.set('#nav-transition-overlay', { opacity: 0, yPercent: 100 });
+            }
+          });
+          gsap.to('#nav-transition-text', {
+            opacity: 0,
+            duration: 0.3
+          });
+        }, 400);
+      }
+    });
+
+    // Text fades in slightly after the overlay starts sliding up
+    gsap.to('#nav-transition-text', {
+      opacity: 1,
+      y: 0,
+      duration: 0.4,
+      ease: 'power2.out',
+      delay: 0.4
+    });
   };
 
   return (
@@ -181,7 +228,7 @@ export default function Navbar() {
             <a
               key={link.label}
               href={link.href}
-              onClick={(e) => { e.preventDefault(); handleLinkClick(link.href); }}
+              onClick={(e) => { e.preventDefault(); handleLinkClick(link.href, link.label); }}
               className="relative py-2 group overflow-hidden"
               data-cursor="pointer"
             >
@@ -244,7 +291,7 @@ export default function Navbar() {
             {LINKS.map((link) => (
               <div key={link.label} className="overflow-hidden">
                 <span
-                  onClick={() => handleLinkClick(link.href)}
+                  onClick={() => handleLinkClick(link.href, link.label)}
                   className="menu-link block text-4xl md:text-5xl font-serif text-fg-main hover:text-accent cursor-pointer transition-colors duration-300 py-1"
                 >
                   {link.label}
@@ -263,6 +310,17 @@ export default function Navbar() {
               <a href="#" className="hover:text-accent transition-colors">Twitter</a>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Page Transition Overlay */}
+      <div
+        id="nav-transition-overlay"
+        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center pointer-events-none opacity-0"
+      >
+        <div id="nav-transition-text" className="flex items-center gap-4 text-fg-main text-4xl md:text-5xl font-serif font-light opacity-0">
+          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />
+          <span>{transitioningTo}</span>
         </div>
       </div>
     </>
