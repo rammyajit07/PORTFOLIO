@@ -146,7 +146,7 @@ export default function Navbar() {
     setTransitioningTo(label);
     
     // Setup initial state for the overlay: visible but pushed below the screen
-    gsap.set('#nav-transition-overlay', { yPercent: 100, opacity: 1 });
+    gsap.set('#nav-transition-overlay', { yPercent: 100, opacity: 1, pointerEvents: 'all' });
     gsap.set('#nav-transition-text', { opacity: 0, y: 20 });
 
     // 1. Slide up to cover screen
@@ -176,8 +176,12 @@ export default function Navbar() {
             duration: 0.8,
             ease: 'power4.inOut',
             onComplete: () => {
-              // Reset back to invisible state
-              gsap.set('#nav-transition-overlay', { opacity: 0, yPercent: 100 });
+              // Always fully reset — opacity 0, off-screen, NO pointer events
+              gsap.set('#nav-transition-overlay', {
+                opacity: 0,
+                yPercent: 100,
+                pointerEvents: 'none'
+              });
             }
           });
           gsap.to('#nav-transition-text', {
@@ -314,9 +318,12 @@ export default function Navbar() {
       </div>
 
       {/* Page Transition Overlay */}
+      {/* pointer-events and opacity are fully managed by GSAP — the CSS class
+          just sets the safe initial/fallback state so it never blocks clicks */}
       <div
         id="nav-transition-overlay"
-        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center pointer-events-none opacity-0"
+        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center"
+        style={{ opacity: 0, pointerEvents: 'none', transform: 'translateY(100%)' }}
       >
         <div id="nav-transition-text" className="flex items-center gap-4 text-fg-main text-4xl md:text-5xl font-serif font-light opacity-0">
           <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />

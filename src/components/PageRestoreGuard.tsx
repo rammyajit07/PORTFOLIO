@@ -22,10 +22,12 @@ import { getLenis } from '@/lib/getLenis';
 export default function PageRestoreGuard() {
   useEffect(() => {
     const resetPageState = () => {
-      // 1. Force the nav-transition overlay to be invisible
+      // 1. Force the nav-transition overlay to be invisible and non-blocking
       const overlay = document.getElementById('nav-transition-overlay');
       if (overlay) {
         gsap.set(overlay, { opacity: 0, yPercent: 100, pointerEvents: 'none' });
+        // Belt-and-suspenders: also set via inline style so it survives GSAP resets
+        overlay.style.pointerEvents = 'none';
       }
 
       const overlayText = document.getElementById('nav-transition-text');
@@ -62,6 +64,10 @@ export default function PageRestoreGuard() {
         resetPageState();
       }
     };
+
+    // Run immediately on mount — fixes Vercel SSR hydration edge case where
+    // the overlay might have stale inline styles from a previous GSAP session
+    resetPageState();
 
     window.addEventListener('pageshow', handlePageShow);
     document.addEventListener('visibilitychange', handleVisibilityChange);
