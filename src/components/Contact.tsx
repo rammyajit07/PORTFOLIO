@@ -4,23 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { FiGithub, FiInstagram, FiMail } from 'react-icons/fi';
+import { FiMail } from 'react-icons/fi';
 
 const SOCIALS = [
-  {
-    id: 'github',
-    label: 'GitHub',
-    href: 'https://github.com/rammyajit07',
-    Icon: FiGithub,
-    hoverColor: '#f4f4f6',
-  },
-  {
-    id: 'instagram',
-    href: 'https://www.instagram.com/rammyajit/',
-    label: 'Instagram',
-    Icon: FiInstagram,
-    hoverColor: '#E1306C',
-  },
   {
     id: 'email',
     label: 'Email',
@@ -154,13 +140,7 @@ export default function Contact() {
                         transition: 'color 300ms ease',
                         color: 'inherit',
                       }}
-                      className={
-                        id === 'github'
-                          ? 'group-hover:!text-[#f4f4f6]'
-                          : id === 'instagram'
-                          ? 'group-hover:!text-[#E1306C]'
-                          : 'group-hover:!text-accent'
-                      }
+                      className="group-hover:!text-accent"
                     />
                   </span>
                   <span className="text-[10px] uppercase tracking-widest text-fg-muted group-hover:text-fg-main transition-colors duration-300">

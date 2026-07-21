@@ -146,62 +146,73 @@ export default function Navbar() {
     setTransitioningTo(label);
 
     const overlay = document.getElementById('nav-transition-overlay');
-    if (!overlay) return;
+    const text = document.getElementById('nav-transition-text');
+    if (!overlay || !text) return;
 
     // Remove the safety class so the overlay can be visible & interactive
     overlay.classList.remove('overlay-idle');
-    
-    // Setup initial state for the overlay: visible but pushed below the screen
-    gsap.set(overlay, { yPercent: 100, opacity: 1 });
-    gsap.set('#nav-transition-text', { opacity: 0, y: 20 });
 
-    // 1. Slide up to cover screen
-    gsap.to(overlay, {
+    // Reset overlay and text state immediately
+    gsap.killTweensOf([overlay, text]);
+
+    // Create a GSAP timeline for the transition
+    const tl = gsap.timeline();
+
+    tl.set(overlay, { 
+      yPercent: 100, 
+      opacity: 1 
+    })
+    .set(text, { 
+      opacity: 0, 
+      y: 20 
+    })
+    // 1. Slide up overlay to cover screen
+    .to(overlay, {
       yPercent: 0,
       duration: 0.8,
-      ease: 'power4.inOut',
-      onComplete: () => {
-        // 2. Jump to the section instantly while screen is black
-        const target = document.querySelector(href) as HTMLElement | null;
-        if (target) {
-          try {
-            const lenis = getLenis();
-            if (lenis) {
-              lenis.scrollTo(target, { immediate: true });
-            }
-          } catch (e) {
-            // fallback
-          }
-          target.scrollIntoView({ behavior: 'auto' });
-        }
-
-        // 3. Hold briefly, then slide up and out of the screen
-        setTimeout(() => {
-          gsap.to(overlay, {
-            yPercent: -100,
-            duration: 0.8,
-            ease: 'power4.inOut',
-            onComplete: () => {
-              // Always fully reset — off-screen, then re-add safety class
-              gsap.set(overlay, { opacity: 0, yPercent: 100 });
-              overlay.classList.add('overlay-idle');
-            }
-          });
-          gsap.to('#nav-transition-text', {
-            opacity: 0,
-            duration: 0.3
-          });
-        }, 400);
-      }
-    });
-
-    // Text fades in slightly after the overlay starts sliding up
-    gsap.to('#nav-transition-text', {
+      ease: 'power4.inOut'
+    })
+    // 2. Fade in text slightly after overlay starts sliding
+    .to(text, {
       opacity: 1,
       y: 0,
       duration: 0.4,
-      ease: 'power2.out',
-      delay: 0.4
+      ease: 'power2.out'
+    }, '-=0.4')
+    // 3. Jump to the section instantly while screen is black
+    .add(() => {
+      const target = document.querySelector(href) as HTMLElement | null;
+      if (target) {
+        try {
+          const lenis = getLenis();
+          if (lenis) {
+            lenis.scrollTo(target, { immediate: true });
+          }
+        } catch (e) {
+          // fallback
+        }
+        target.scrollIntoView({ behavior: 'auto' });
+      }
+    })
+    // 4. Hold briefly for visual impact
+    .to({}, { duration: 0.4 })
+    // 5. Slide overlay up and out of the screen
+    .to(overlay, {
+      yPercent: -100,
+      duration: 0.8,
+      ease: 'power4.inOut'
+    })
+    .to(text, {
+      opacity: 0,
+      duration: 0.3
+    }, '-=0.5')
+    // 6. Reset overlay back to invisible state and re-add safety class
+    .set(overlay, { 
+      opacity: 0, 
+      yPercent: 100 
+    })
+    .add(() => {
+      overlay.classList.add('overlay-idle');
     });
   };
 
@@ -312,8 +323,6 @@ export default function Navbar() {
           <div className="flex flex-col gap-1 text-[11px] uppercase tracking-widest text-fg-muted">
             <span className="text-[9px] uppercase tracking-[0.3em] text-fg-muted font-bold block mb-2">Socials</span>
             <div className="flex gap-4">
-              <a href="https://github.com/rammyajit07" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">GitHub</a>
-              <a href="https://www.instagram.com/rammyajit/" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">Instagram</a>
               <a href="mailto:rammyajit07@gmail.com" className="hover:text-accent transition-colors">Email</a>
             </div>
           </div>
