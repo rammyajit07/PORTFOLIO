@@ -334,8 +334,7 @@ export default function Navbar() {
           at the CSS level — immune to GSAP inline-style race conditions */}
       <div
         id="nav-transition-overlay"
-        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center overlay-idle"
-        style={{ opacity: 0, transform: 'translateY(100%)' }}
+        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center overlay-idle opacity-0 translate-y-full"
       >
         <div id="nav-transition-text" className="flex items-center gap-4 text-fg-main text-4xl md:text-5xl font-serif font-light opacity-0">
           <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />
