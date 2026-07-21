@@ -25,8 +25,9 @@ export default function PageRestoreGuard() {
       // 1. Force the nav-transition overlay to be invisible and non-blocking
       const overlay = document.getElementById('nav-transition-overlay');
       if (overlay) {
-        gsap.set(overlay, { opacity: 0, yPercent: 100, pointerEvents: 'none' });
-        // Belt-and-suspenders: also set via inline style so it survives GSAP resets
+        gsap.set(overlay, { opacity: 0, yPercent: 100 });
+        // Re-apply the CSS-level safety class so the overlay can never block clicks
+        overlay.classList.add('overlay-idle');
         overlay.style.pointerEvents = 'none';
       }
 
