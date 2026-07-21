@@ -4,6 +4,7 @@ import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
 import CustomCursor from '@/components/CustomCursor';
 import PageRestoreGuard from '@/components/PageRestoreGuard';
+import { PageTransitionProvider } from '@/components/PageTransition';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,11 +43,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
       <body className="bg-bg-main text-fg-main antialiased overflow-x-hidden selection:bg-accent selection:text-bg-main">
-        <SmoothScroll>
-          <CustomCursor />
-          <PageRestoreGuard />
-          {children}
-        </SmoothScroll>
+        <PageTransitionProvider>
+          <SmoothScroll>
+            <CustomCursor />
+            <PageRestoreGuard />
+            {children}
+          </SmoothScroll>
+        </PageTransitionProvider>
       </body>
     </html>
   );

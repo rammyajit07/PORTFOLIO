@@ -25,10 +25,10 @@ export default function PageRestoreGuard() {
       // 1. Force the nav-transition overlay to be invisible and non-blocking
       const overlay = document.getElementById('nav-transition-overlay');
       if (overlay) {
-        gsap.set(overlay, { opacity: 0, yPercent: 100 });
-        // Re-apply the CSS-level safety class so the overlay can never block clicks
-        overlay.classList.add('overlay-idle');
-        overlay.style.pointerEvents = 'none';
+        // Reset overlay using the same strategy as PageTransition: display:none
+        gsap.set(overlay, { display: 'none', yPercent: 100 });
+        // Also ensure no stale overlay-idle class issues
+        overlay.classList.remove('overlay-idle');
       }
 
       const overlayText = document.getElementById('nav-transition-text');

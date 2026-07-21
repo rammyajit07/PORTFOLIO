@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import MagneticButton from './MagneticButton';
 import { getLenis } from '@/lib/getLenis';
+import { usePageTransition } from './PageTransition';
 
 const LINKS = [
   { label: 'Home', href: '#home' },
@@ -16,7 +17,7 @@ const LINKS = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showBurger, setShowBurger] = useState(false);
-  const [transitioningTo, setTransitioningTo] = useState<string | null>(null);
+  const { transitionTo } = usePageTransition();
   
   const burgerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -143,77 +144,7 @@ export default function Navbar() {
 
   const handleLinkClick = (href: string, label: string) => {
     setIsOpen(false);
-    setTransitioningTo(label);
-
-    const overlay = document.getElementById('nav-transition-overlay');
-    const text = document.getElementById('nav-transition-text');
-    if (!overlay || !text) return;
-
-    // Remove the safety class so the overlay can be visible & interactive
-    overlay.classList.remove('overlay-idle');
-
-    // Reset overlay and text state immediately
-    gsap.killTweensOf([overlay, text]);
-
-    // Create a GSAP timeline for the transition
-    const tl = gsap.timeline();
-
-    tl.set(overlay, { 
-      yPercent: 100, 
-      opacity: 1 
-    })
-    .set(text, { 
-      opacity: 0, 
-      y: 20 
-    })
-    // 1. Slide up overlay to cover screen
-    .to(overlay, {
-      yPercent: 0,
-      duration: 0.8,
-      ease: 'power4.inOut'
-    })
-    // 2. Fade in text slightly after overlay starts sliding
-    .to(text, {
-      opacity: 1,
-      y: 0,
-      duration: 0.4,
-      ease: 'power2.out'
-    }, '-=0.4')
-    // 3. Jump to the section instantly while screen is black
-    .add(() => {
-      const target = document.querySelector(href) as HTMLElement | null;
-      if (target) {
-        try {
-          const lenis = getLenis();
-          if (lenis) {
-            lenis.scrollTo(target, { immediate: true });
-          }
-        } catch (e) {
-          // fallback
-        }
-        target.scrollIntoView({ behavior: 'auto' });
-      }
-    })
-    // 4. Hold briefly for visual impact
-    .to({}, { duration: 0.4 })
-    // 5. Slide overlay up and out of the screen
-    .to(overlay, {
-      yPercent: -100,
-      duration: 0.8,
-      ease: 'power4.inOut'
-    })
-    .to(text, {
-      opacity: 0,
-      duration: 0.3
-    }, '-=0.5')
-    // 6. Reset overlay back to invisible state and re-add safety class
-    .set(overlay, { 
-      opacity: 0, 
-      yPercent: 100 
-    })
-    .add(() => {
-      overlay.classList.add('overlay-idle');
-    });
+    transitionTo(href, label);
   };
 
   return (
@@ -329,18 +260,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Page Transition Overlay */}
-      {/* The 'overlay-idle' class ensures pointer-events:none and visibility:hidden
-          at the CSS level — immune to GSAP inline-style race conditions */}
-      <div
-        id="nav-transition-overlay"
-        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center overlay-idle opacity-0 translate-y-full"
-      >
-        <div id="nav-transition-text" className="flex items-center gap-4 text-fg-main text-4xl md:text-5xl font-serif font-light opacity-0">
-          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />
-          <span>{transitioningTo}</span>
-        </div>
-      </div>
     </>
   );
 }

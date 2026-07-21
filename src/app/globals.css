@@ -123,14 +123,8 @@ html.lenis, html.lenis body {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
 }
 
-/* Nav transition overlay safety — CSS-level kill switch.
-   When this class is present, the overlay cannot intercept clicks or
-   capture focus regardless of what GSAP inline styles say.
-   Removed dynamically by JS only during an active page transition. */
-.overlay-idle {
-  pointer-events: none !important;
-  visibility: hidden !important;
-}
+/* Nav transition overlay — hidden via display:none by GSAP (PageTransition.tsx).
+   No CSS class tricks needed; display:none is the cleanest way to hide it. */
 
 /* Custom Selection styling */
 ::selection {
