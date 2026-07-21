@@ -144,13 +144,19 @@ export default function Navbar() {
   const handleLinkClick = (href: string, label: string) => {
     setIsOpen(false);
     setTransitioningTo(label);
+
+    const overlay = document.getElementById('nav-transition-overlay');
+    if (!overlay) return;
+
+    // Remove the safety class so the overlay can be visible & interactive
+    overlay.classList.remove('overlay-idle');
     
     // Setup initial state for the overlay: visible but pushed below the screen
-    gsap.set('#nav-transition-overlay', { yPercent: 100, opacity: 1, pointerEvents: 'all' });
+    gsap.set(overlay, { yPercent: 100, opacity: 1 });
     gsap.set('#nav-transition-text', { opacity: 0, y: 20 });
 
     // 1. Slide up to cover screen
-    gsap.to('#nav-transition-overlay', {
+    gsap.to(overlay, {
       yPercent: 0,
       duration: 0.8,
       ease: 'power4.inOut',
@@ -171,17 +177,14 @@ export default function Navbar() {
 
         // 3. Hold briefly, then slide up and out of the screen
         setTimeout(() => {
-          gsap.to('#nav-transition-overlay', {
+          gsap.to(overlay, {
             yPercent: -100,
             duration: 0.8,
             ease: 'power4.inOut',
             onComplete: () => {
-              // Always fully reset — opacity 0, off-screen, NO pointer events
-              gsap.set('#nav-transition-overlay', {
-                opacity: 0,
-                yPercent: 100,
-                pointerEvents: 'none'
-              });
+              // Always fully reset — off-screen, then re-add safety class
+              gsap.set(overlay, { opacity: 0, yPercent: 100 });
+              overlay.classList.add('overlay-idle');
             }
           });
           gsap.to('#nav-transition-text', {
@@ -318,12 +321,12 @@ export default function Navbar() {
       </div>
 
       {/* Page Transition Overlay */}
-      {/* pointer-events and opacity are fully managed by GSAP — the CSS class
-          just sets the safe initial/fallback state so it never blocks clicks */}
+      {/* The 'overlay-idle' class ensures pointer-events:none and visibility:hidden
+          at the CSS level — immune to GSAP inline-style race conditions */}
       <div
         id="nav-transition-overlay"
-        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center"
-        style={{ opacity: 0, pointerEvents: 'none', transform: 'translateY(100%)' }}
+        className="fixed inset-0 z-[99999] bg-bg-main flex items-center justify-center overlay-idle"
+        style={{ opacity: 0, transform: 'translateY(100%)' }}
       >
         <div id="nav-transition-text" className="flex items-center gap-4 text-fg-main text-4xl md:text-5xl font-serif font-light opacity-0">
           <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-accent" />
